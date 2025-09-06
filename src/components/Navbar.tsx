@@ -1,11 +1,26 @@
 import ThemeSwitcher from "./ThemeSwitcher";
+// import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
-export default function Navbar() {
+
+export default function Navbar({ onMenuClick }: { onMenuClick: () => void }) {
   return (
-    <nav className="h-20 w-full bg-white dark:bg-gray-900 shadow flex items-center justify-between px-6">
-      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-        AI Studio
+    <nav className="fixed top-0 left-0 right-0  h-20 w-full bg-white border-b dark:bg-gray-900 dark:border-gray-700 shadow flex items-center justify-between px-6 ">
+      <div className="flex items-center gap-3">
+        {/* Hamburger visible only on small screens */}
+        <button
+          onClick={onMenuClick}
+          className="md:hidden text-gray-800 dark:text-gray-200"
+        >
+          <FontAwesomeIcon icon={faBars} size="lg" />
+        </button>
+
+        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          AI Studio
+        </div>
       </div>
+
 
       <div className="flex items-center gap-4">
         <ThemeSwitcher />

@@ -8,6 +8,6 @@ body * {
 
 @layer components {
   .btn {
-    @apply px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:cursor-pointer;
+    @apply bg-blue-500 px-6 py-3 font-semibold text-white shadow-lg hover:cursor-pointer hover:bg-blue-600;
   }
 }

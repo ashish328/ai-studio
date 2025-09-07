@@ -43,23 +43,21 @@ export default function FileUpload() {
           <div className="flex flex-col items-center">
             <FontAwesomeIcon
               icon={faCloudArrowUp}
-              className="text-4xl text-gray-500 dark:text-gray-300 mb-3"
+              className="mb-3 text-4xl text-gray-500 dark:text-gray-300"
             />
-            <p className="text-gray-700 dark:text-gray-200 text-center">
+            <p className="text-center text-gray-700 dark:text-gray-200">
               <span className="font-semibold">Click to upload</span> or drag and drop
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              SVG, PNG, JPG or GIF
-            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">SVG, PNG, JPG or JPEG</p>
           </div>
         ) : (
-          <div className="w-full h-full p-2 overflow-y-auto">
+          <div className="h-full w-full overflow-y-auto p-2">
             {files.map((file, index) => (
               <img
                 key={index}
                 src={URL.createObjectURL(file)}
                 alt={file.name}
-                className="w-full h-full object-cover rounded-lg"
+                className="h-full w-full rounded-lg object-cover"
               />
             ))}
           </div>

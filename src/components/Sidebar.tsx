@@ -18,9 +18,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         className={`fixed top-0 left-0 z-50 flex h-[calc(100vh-5rem)] w-64 transform flex-col border-r border-gray-300 bg-gray-100 transition-transform md:top-20 dark:border-gray-700 dark:bg-gray-900 ${isOpen ? 'top-0 translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
         <div className="overflow-y-auto px-4 py-8">
-          <button className="mb-6 w-full rounded-lg btn">
-            + New Chat
-          </button>
+          <button className="btn mb-6 w-full rounded-lg">+ New Chat</button>
 
           <h2 className="mb-2 text-sm font-semibold text-gray-600 dark:text-gray-400">History</h2>
 

@@ -2,9 +2,9 @@ import { useState } from 'react'
 
 import './App.css'
 
+import AiGeneration from './components/AiGeneration'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
-import AiGeneration from './components/AiGeneration'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -14,7 +14,7 @@ function App() {
       <Navbar onMenuClick={() => setSidebarOpen(true)} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 bg-gray-50 p-2 pt-22 text-gray-900 md:ml-64 dark:bg-gray-800 dark:text-gray-100">
-        <AiGeneration/>
+        <AiGeneration />
       </main>
     </div>
   )

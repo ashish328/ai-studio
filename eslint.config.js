@@ -5,6 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { globalIgnores } from 'eslint/config'
 import eslintConfigPrettier from "eslint-config-prettier/flat"
+// import tailwindcss from 'eslint-plugin-tailwindcss'
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -15,11 +16,15 @@ export default tseslint.config([
       tseslint.configs.recommended,
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
-      eslintConfigPrettier
+      eslintConfigPrettier,
+      // tailwindcss
     ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    // rules: {
+    //   "tailwindcss/classnames-order": "warn",
+    // }
   },
 ])

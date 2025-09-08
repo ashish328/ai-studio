@@ -28,13 +28,13 @@ export default function AiGeneration() {
           <FileUpload />
 
           <div>
-            <PromptInput value={prompt} onChange={setPrompt} />
-            <StyleDropdown value={style} onChange={setStyle} />
+            <StyleDropdown value={style} onValueChange={setStyle} />
+            <PromptInput className="mt-6" value={prompt} onValueChange={setPrompt} />
           </div>
         </div>
 
         <div className="mt-8 flex justify-center">
-          <button onClick={handleGenerate} className="btn rounded-full">
+          <button onClick={handleGenerate} className="btn">
             ✨ Generate
           </button>
         </div>

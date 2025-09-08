@@ -1,7 +1,7 @@
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
-import type { ChangeEvent, DragEvent } from 'react'
+import type { ChangeEvent, DragEvent, KeyboardEvent } from 'react'
 
 export default function FileUpload() {
   const [isDragging, setIsDragging] = useState(false)
@@ -30,11 +30,21 @@ export default function FileUpload() {
     }
   }
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLLabelElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      document.getElementById('file-input')?.click()
+    }
+  }
+
   return (
     <div className="mx-auto w-full max-w-2xl">
       <label
+        role="button"
+        tabIndex={0}
+        aria-label="Upload an image. Press Enter or Space to open file dialog, or drag and drop."
         htmlFor="file-upload"
-        className={`flex h-64 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition ${isDragging ? 'border-blue-500 bg-blue-50 dark:bg-gray-700' : 'border-gray-400 bg-gray-100 dark:border-gray-600 dark:bg-gray-800'} `}
+        className={`flex h-64 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition focus:ring-2 focus:ring-blue-500 focus:outline-none ${isDragging ? 'border-blue-500 bg-blue-50 dark:bg-gray-700' : 'border-gray-400 bg-gray-100 dark:border-gray-600 dark:bg-gray-800'} `}
+        onKeyDown={handleKeyDown}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -64,9 +74,9 @@ export default function FileUpload() {
         )}
 
         <input
-          id="file-upload"
+          id="file-input"
           type="file"
-          multiple
+          aria-hidden="true"
           className="hidden"
           accept="image/png, image/jpg, image/jpeg, image/svg"
           onChange={handleFileChange}

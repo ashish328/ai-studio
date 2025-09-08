@@ -1,13 +1,18 @@
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ChangeEvent, DragEvent, KeyboardEvent } from 'react'
 
 import { resizeImage } from '../utils/resizeImage'
 
-export default function FileUpload() {
+interface FileUploadProps {
+  onSelectFile: (file: File) => void
+}
+
+export default function FileUpload({ onSelectFile }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleDragOver = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault()
@@ -26,6 +31,7 @@ export default function FileUpload() {
       resizedFile = resized
     }
 
+    onSelectFile(resizedFile)
     setFile(resizedFile)
   }
 
@@ -45,7 +51,7 @@ export default function FileUpload() {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLLabelElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      document.getElementById('file-input')?.click()
+      inputRef.current?.click()
     }
   }
 
@@ -61,6 +67,9 @@ export default function FileUpload() {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        onClick={() => {
+          inputRef.current?.click()
+        }}
       >
         {!file ? (
           <div className="flex flex-col items-center">
@@ -85,6 +94,7 @@ export default function FileUpload() {
 
         <input
           id="file-input"
+          ref={inputRef}
           type="file"
           aria-hidden="true"
           className="hidden"

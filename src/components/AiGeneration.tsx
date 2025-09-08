@@ -1,15 +1,65 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import type { GenerateImageResponse } from '../types'
+import { generateImageRequest } from '../utils/api'
 import FileUpload from './FileUpload'
+import LoadingModel from './LoadingModel'
 import PromptInput from './PromptInput'
 import StyleDropdown from './StyleDropdown'
 
 export default function AiGeneration() {
+  const [fileUrl, setFileUrl] = useState<string | null>(null)
   const [prompt, setPrompt] = useState('')
   const [style, setStyle] = useState('Photorealistic')
+  const [error, setError] = useState<string | null>(null)
+  const [state, setState] = useState<'loading' | 'error'>('loading')
+  const [modalOpen, setModalOpen] = useState(false)
 
-  const handleGenerate = () => {
-    console.log('Generating with:', { prompt, style })
+  const errorTimer = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (errorTimer.current) {
+      clearTimeout(errorTimer.current)
+    }
+    if (error) {
+      errorTimer.current = setTimeout(() => {
+        setError(null)
+      }, 2000)
+    }
+  }, [error])
+
+  /**
+   * TODO:: we can move to the new UI to display the image we have given
+   * for generation and the image generated into a chat UI or any other UI
+   */
+  const handleGenerate = async () => {
+    if (!fileUrl || !prompt) {
+      setError('Please upload a image and enter a prompt before generating.')
+      return
+    }
+
+    let response: GenerateImageResponse | undefined = undefined
+    try {
+      setModalOpen(true)
+      setState('loading')
+      response = await generateImageRequest({
+        imageDataUrl: fileUrl,
+        prompt,
+        style
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setModalOpen(false)
+      setState('loading')
+      if (response) {
+        console.log(response)
+      }
+    }
+  }
+
+  const onSelectFile = (file: File) => {
+    setFileUrl(URL.createObjectURL(file))
   }
 
   return (
@@ -25,7 +75,7 @@ export default function AiGeneration() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <FileUpload />
+          <FileUpload onSelectFile={onSelectFile} />
 
           <div>
             <StyleDropdown value={style} onValueChange={setStyle} />
@@ -33,11 +83,27 @@ export default function AiGeneration() {
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 text-center">
           <button onClick={handleGenerate} className="btn">
             ✨ Generate
           </button>
+          {error && (
+            <p
+              className="mt-3 text-center text-sm font-medium text-red-600 dark:text-red-400"
+              role="alert"
+            >
+              {error}
+            </p>
+          )}
         </div>
+
+        <LoadingModel
+          isOpen={modalOpen}
+          state={state}
+          attempt={2}
+          maxAttempts={3}
+          onAbort={() => setModalOpen(false)}
+        />
       </div>
     </div>
   )

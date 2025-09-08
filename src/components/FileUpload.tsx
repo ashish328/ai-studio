@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import type { ChangeEvent, DragEvent, KeyboardEvent } from 'react'
 
+import { resizeImage } from '../utilities/resizeImage'
+
 export default function FileUpload() {
   const [isDragging, setIsDragging] = useState(false)
-  const [files, setFiles] = useState<File[]>([])
+  const [file, setFile] = useState<File | null>(null)
 
   const handleDragOver = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault()
@@ -16,17 +18,28 @@ export default function FileUpload() {
     setIsDragging(false)
   }
 
-  const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
+  const handleFile = async (selectedFile: File) => {
+    let resizedFile: File = selectedFile
+
+    if (selectedFile.type.startsWith('image/')) {
+      const resized = await resizeImage(selectedFile, 1920)
+      resizedFile = resized
+    }
+
+    setFile(resizedFile)
+  }
+
+  const handleDrop = async (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault()
     setIsDragging(false)
     if (e.dataTransfer.files) {
-      setFiles(Array.from(e.dataTransfer.files))
+      await handleFile(e.dataTransfer.files[0])
     }
   }
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFiles(Array.from(e.target.files))
+      await handleFile(e.target.files[0])
     }
   }
 
@@ -49,7 +62,7 @@ export default function FileUpload() {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        {files.length === 0 ? (
+        {!file ? (
           <div className="flex flex-col items-center">
             <FontAwesomeIcon
               icon={faCloudArrowUp}
@@ -62,14 +75,11 @@ export default function FileUpload() {
           </div>
         ) : (
           <div className="h-full w-full overflow-y-auto p-2">
-            {files.map((file, index) => (
-              <img
-                key={index}
-                src={URL.createObjectURL(file)}
-                alt={file.name}
-                className="h-full w-full rounded-lg object-cover"
-              />
-            ))}
+            <img
+              src={URL.createObjectURL(file)}
+              alt={file.name}
+              className="h-full w-full rounded-lg object-cover"
+            />
           </div>
         )}
 

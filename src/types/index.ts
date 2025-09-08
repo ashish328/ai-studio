@@ -3,4 +3,5 @@ export interface GenerateImageResponse {
   imageUrl: string
   prompt: string
   style: string
+  createdAt: string
 }

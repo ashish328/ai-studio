@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import type { ChangeEvent, DragEvent, KeyboardEvent } from 'react'
 
-import { resizeImage } from '../utilities/resizeImage'
+import { resizeImage } from '../utils/resizeImage'
 
 export default function FileUpload() {
   const [isDragging, setIsDragging] = useState(false)

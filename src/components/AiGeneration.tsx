@@ -14,6 +14,7 @@ export default function AiGeneration() {
   const [error, setError] = useState<string | null>(null)
   const [state, setState] = useState<'loading' | 'error'>('loading')
   const [modalOpen, setModalOpen] = useState(false)
+  const [fileUploadkey, setFileUploadKey] = useState<number>(0)
 
   const errorTimer = useRef<number | null>(null)
 
@@ -28,13 +29,20 @@ export default function AiGeneration() {
     }
   }, [error])
 
+  const resetFields = () => {
+    setFileUrl('')
+    setPrompt('')
+    setStyle('Photorealistic')
+    setFileUploadKey((prev) => prev + 1)
+  }
+
   /**
    * TODO:: we can move to the new UI to display the image we have given
    * for generation and the image generated into a chat UI or any other UI
    */
   const handleGenerate = async () => {
     if (!fileUrl || !prompt) {
-      setError('Please upload a image and enter a prompt before generating.')
+      setError('Please upload an image and enter a prompt before generating.')
       return
     }
 
@@ -47,6 +55,7 @@ export default function AiGeneration() {
         prompt,
         style
       })
+      resetFields()
     } catch (err) {
       console.error(err)
     } finally {
@@ -75,7 +84,7 @@ export default function AiGeneration() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <FileUpload onSelectFile={onSelectFile} />
+          <FileUpload key={fileUploadkey} onSelectFile={onSelectFile} />
 
           <div>
             <StyleDropdown value={style} onValueChange={setStyle} />

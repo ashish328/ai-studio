@@ -31,6 +31,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             ) : (
               history.map((item) => (
                 <li key={item.id}>
+                  {/* TODO:: Move the button into HistoryLink component */}
                   <button
                     className={`flex w-full items-center space-x-2 rounded-lg p-2 text-left hover:bg-gray-100 focus:inset-ring-2 focus:inset-ring-blue-400 focus:outline-none dark:hover:bg-gray-800 ${selectedHistory && item.id === selectedHistory.id ? 'inset-ring-2 inset-ring-blue-400' : ''} `}
                     aria-label={`Load history: ${item.prompt}, style ${item.style}`}

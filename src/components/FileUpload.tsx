@@ -6,10 +6,10 @@ import type { ChangeEvent, DragEvent, KeyboardEvent } from 'react'
 import { resizeImage } from '../utils/resizeImage'
 
 interface FileUploadProps {
-  onSelectFile: (url: string) => void
+  onUpload: (url: string) => void
 }
 
-export default function FileUpload({ onSelectFile }: FileUploadProps) {
+export default function FileUpload({ onUpload }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [fileUrl, setFileUrl] = useState<string>('')
@@ -38,7 +38,7 @@ export default function FileUpload({ onSelectFile }: FileUploadProps) {
     setFile(resizedFile)
     const url = URL.createObjectURL(resizedFile)
     setFileUrl(url)
-    onSelectFile(url)
+    onUpload(url)
   }
 
   const handleDrop = async (e: DragEvent<HTMLLabelElement>) => {
@@ -102,6 +102,7 @@ export default function FileUpload({ onSelectFile }: FileUploadProps) {
           className="hidden"
           accept="image/png, image/jpg, image/jpeg, image/svg"
           onChange={handleFileChange}
+          data-testid="upload-file"
         />
       </label>
     </div>

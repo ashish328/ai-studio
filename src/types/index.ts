@@ -5,3 +5,9 @@ export interface GenerateImageResponse {
   style: string
   createdAt: string
 }
+
+export interface GenerateImageRequest {
+  imageDataUrl: string
+  prompt: string
+  style: string
+}

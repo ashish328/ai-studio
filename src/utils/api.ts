@@ -1,19 +1,29 @@
-import type { GenerateImageResponse } from '../types'
+import type { GenerateImageRequest, GenerateImageResponse } from '../types'
+
+interface RequestParams extends GenerateImageRequest {
+  signal: AbortSignal
+}
 
 // TODO: move the types to an interface and use them;
 export async function generateImageRequest({
   imageDataUrl,
   prompt,
-  style
-}: {
-  imageDataUrl: string
-  prompt: string
-  style: string
-}): Promise<GenerateImageResponse> {
+  style,
+  signal
+}: RequestParams): Promise<GenerateImageResponse> {
+  const randValue = Math.random()
+  if (randValue < 0.9) {
+    // Simulate error 20% of the time
+    console.log('simulated error', Date.now())
+    await new Promise((res) => setTimeout(res, 1500))
+    throw new Error('Simulated network error')
+  }
+
   const response = await fetch('https://ai-studio.free.beeceptor.com/generate-images', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageDataUrl, prompt, style })
+    body: JSON.stringify({ imageDataUrl, prompt, style }),
+    signal
   })
 
   if (!response.ok) {

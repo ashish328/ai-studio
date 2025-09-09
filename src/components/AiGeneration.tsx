@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import type { GenerateImageResponse } from '../types'
-import { generateImageRequest } from '../utils/api'
+import { useError } from '../hooks/useError'
+import { useGenerateImage } from '../hooks/useGenerateImage'
 import FileUpload from './FileUpload'
 import LoadingModel from './LoadingModel'
 import PromptInput from './PromptInput'
@@ -9,25 +9,15 @@ import StyleDropdown from './StyleDropdown'
 
 export default function AiGeneration() {
   const [fileUrl, setFileUrl] = useState<string | null>(null)
-  const [prompt, setPrompt] = useState('')
-  const [style, setStyle] = useState('Photorealistic')
-  const [error, setError] = useState<string | null>(null)
-  const [state, setState] = useState<'loading' | 'error'>('loading')
-  const [modalOpen, setModalOpen] = useState(false)
   const [fileUploadkey, setFileUploadKey] = useState<number>(0)
 
-  const errorTimer = useRef<number | null>(null)
+  const [prompt, setPrompt] = useState('')
+  const [style, setStyle] = useState('Photorealistic')
 
-  useEffect(() => {
-    if (errorTimer.current) {
-      clearTimeout(errorTimer.current)
-    }
-    if (error) {
-      errorTimer.current = setTimeout(() => {
-        setError(null)
-      }, 2000)
-    }
-  }, [error])
+  const { error: validationError, setError: setValidationError } = useError()
+
+  const [modalOpen, setModalOpen] = useState(false)
+  const { generate, abort, state, error: apiError, attempt, result } = useGenerateImage(3)
 
   const resetFields = () => {
     setFileUrl('')
@@ -40,36 +30,35 @@ export default function AiGeneration() {
    * TODO:: we can move to the new UI to display the image we have given
    * for generation and the image generated into a chat UI or any other UI
    */
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     if (!fileUrl || !prompt) {
-      setError('Please upload an image and enter a prompt before generating.')
+      setValidationError('Please upload an image and enter a prompt before generating.')
       return
     }
-
-    let response: GenerateImageResponse | undefined = undefined
-    try {
-      setModalOpen(true)
-      setState('loading')
-      response = await generateImageRequest({
-        imageDataUrl: fileUrl,
-        prompt,
-        style
-      })
-      resetFields()
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setModalOpen(false)
-      setState('loading')
-      if (response) {
-        console.log(response)
-      }
-    }
+    setModalOpen(true)
+    generate({
+      imageDataUrl: fileUrl,
+      prompt,
+      style
+    })
   }
 
   const onSelectFile = (file: File) => {
     setFileUrl(URL.createObjectURL(file))
   }
+
+  useEffect(() => {
+    if (result && modalOpen) {
+      setModalOpen(false)
+      resetFields()
+    }
+  }, [result, modalOpen])
+
+  useEffect(() => {
+    if (attempt && attempt > 3) {
+      setModalOpen(false)
+    }
+  }, [attempt])
 
   return (
     <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center">
@@ -96,12 +85,12 @@ export default function AiGeneration() {
           <button onClick={handleGenerate} className="btn">
             ✨ Generate
           </button>
-          {error && (
+          {(validationError || apiError) && (
             <p
               className="mt-3 text-center text-sm font-medium text-red-600 dark:text-red-400"
               role="alert"
             >
-              {error}
+              {validationError || apiError}
             </p>
           )}
         </div>
@@ -109,9 +98,12 @@ export default function AiGeneration() {
         <LoadingModel
           isOpen={modalOpen}
           state={state}
-          attempt={2}
+          attempt={attempt}
           maxAttempts={3}
-          onAbort={() => setModalOpen(false)}
+          onAbort={() => {
+            abort()
+            setModalOpen(false)
+          }}
         />
       </div>
     </div>

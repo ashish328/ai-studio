@@ -7,7 +7,7 @@ interface StyleDropdownProps extends HTMLAttributes<HTMLDivElement> {
 
 export default function StyleDropdown({ value, onValueChange, ...props }: StyleDropdownProps) {
   // TODO:: Move styles to props so and change it type to array of object [{name, value}] to make it more reusable.
-  const styles = ['Photorealistic', 'Cartoon', '3D Render', 'Sketch']
+  const styles = ['Editorial', 'Streetwear', 'Vintage']
 
   return (
     <div className="flex flex-col space-y-2" {...props}>

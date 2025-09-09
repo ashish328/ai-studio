@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import type { GenerateImageRequest, GenerateImageResponse } from '../types'
 import { generateImageRequest } from '../utils/api'
+import { useError } from './useError'
 
 export function useGenerateImage(maxRetries: number) {
   const [state, setState] = useState<'loading' | 'error'>('loading')
-  const [error, setError] = useState<string | null>(null)
   const [attempt, setAttempt] = useState<number>(0)
   const [result, setResult] = useState<GenerateImageResponse | null>(null)
-  const errorTimer = useRef<number | null>(null)
+
+  const { error, setError } = useError(3000)
 
   const abortControllerRef = useRef<AbortController | null>(null)
 
@@ -55,30 +56,11 @@ export function useGenerateImage(maxRetries: number) {
 
       return null
     },
-    [attempt, maxRetries]
+    [attempt, maxRetries, setError]
   )
 
   const abort = useCallback(() => {
     abortControllerRef.current?.abort()
-  }, [])
-
-  useEffect(() => {
-    if (errorTimer.current) {
-      clearTimeout(errorTimer.current)
-    }
-    if (error) {
-      errorTimer.current = setTimeout(() => {
-        setError(null)
-      }, 2000)
-    }
-  }, [error])
-
-  useEffect(() => {
-    return () => {
-      if (errorTimer.current) {
-        clearTimeout(errorTimer.current)
-      }
-    }
   }, [])
 
   return { generate, abort, state, error, attempt, result }

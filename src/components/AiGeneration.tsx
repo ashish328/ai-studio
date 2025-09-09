@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
+import { useError } from '../hooks/useError'
 import { useGenerateImage } from '../hooks/useGenerateImage'
 import FileUpload from './FileUpload'
 import LoadingModel from './LoadingModel'
@@ -13,8 +14,7 @@ export default function AiGeneration() {
   const [prompt, setPrompt] = useState('')
   const [style, setStyle] = useState('Photorealistic')
 
-  const [error, setError] = useState<string | null>(null)
-  const errorTimer = useRef<number | null>(null)
+  const { error: validationError, setError: setValidationError } = useError()
 
   const [modalOpen, setModalOpen] = useState(false)
   const { generate, abort, state, error: apiError, attempt, result } = useGenerateImage(3)
@@ -32,7 +32,7 @@ export default function AiGeneration() {
    */
   const handleGenerate = () => {
     if (!fileUrl || !prompt) {
-      setError('Please upload an image and enter a prompt before generating.')
+      setValidationError('Please upload an image and enter a prompt before generating.')
       return
     }
     setModalOpen(true)
@@ -48,17 +48,6 @@ export default function AiGeneration() {
   }
 
   useEffect(() => {
-    if (errorTimer.current) {
-      clearTimeout(errorTimer.current)
-    }
-    if (error) {
-      errorTimer.current = setTimeout(() => {
-        setError(null)
-      }, 2000)
-    }
-  }, [error])
-
-  useEffect(() => {
     if (result && modalOpen) {
       setModalOpen(false)
       resetFields()
@@ -70,14 +59,6 @@ export default function AiGeneration() {
       setModalOpen(false)
     }
   }, [attempt])
-
-  useEffect(() => {
-    return () => {
-      if (errorTimer.current) {
-        clearTimeout(errorTimer.current)
-      }
-    }
-  }, [])
 
   return (
     <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center">
@@ -104,12 +85,12 @@ export default function AiGeneration() {
           <button onClick={handleGenerate} className="btn">
             ✨ Generate
           </button>
-          {(error || apiError) && (
+          {(validationError || apiError) && (
             <p
               className="mt-3 text-center text-sm font-medium text-red-600 dark:text-red-400"
               role="alert"
             >
-              {error || apiError}
+              {validationError || apiError}
             </p>
           )}
         </div>

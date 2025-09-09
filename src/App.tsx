@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 
 import './App.css'
 
@@ -9,7 +9,7 @@ import { useHistory } from './contexts/HistoryContext'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const {selectedHistory, setSelectedHistory} = useHistory()
+  const { selectedHistory, setSelectedHistory } = useHistory()
   const HistoryPreview = lazy(() => import('./components/HistoryPreview'))
 
   return (
@@ -30,7 +30,7 @@ function App() {
               item={selectedHistory}
               onClose={() => setSelectedHistory(null)}
               onGenerateNew={() => setSelectedHistory(null)}
-              />
+            />
           </Suspense>
         ) : (
           <AiGeneration />

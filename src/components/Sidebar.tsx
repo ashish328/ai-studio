@@ -1,9 +1,13 @@
+import { useHistory } from '../contexts/HistoryContext'
+
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const { history } = useHistory()
+
   return (
     <>
       {isOpen && (
@@ -22,18 +26,28 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <h2 className="mb-2 text-sm font-semibold text-gray-600 dark:text-gray-400">History</h2>
 
           <ul className="space-y-2 overflow-y-auto text-gray-800 dark:text-gray-200">
-            <li className="cursor-pointer rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700">
-              Lorem ipsum dolor
-            </li>
-            <li className="cursor-pointer rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700">
-              Sit amet consectetur
-            </li>
-            <li className="cursor-pointer rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700">
-              Adipiscing elit sed
-            </li>
-            <li className="cursor-pointer rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-700">
-              Do eiusmod tempor
-            </li>
+            {history.length === 0 ? (
+              <li className="text-gray-400">No history yet</li>
+            ) : (
+              history.map((item) => (
+                <li key={item.id}>
+                  <button
+                    className="flex w-full items-center space-x-2 rounded-lg p-2 text-left hover:bg-gray-100 focus:inset-ring-2 focus:inset-ring-blue-400 focus:outline-none dark:hover:bg-gray-800"
+                    aria-label={`Load history: ${item.prompt}, style ${item.style}`}
+                  >
+                    <img src={item.imageUrl} alt="" className="h-10 w-10 rounded object-cover" />
+                    <div className="flex-1">
+                      <p className="truncate text-gray-800 dark:text-gray-200">
+                        {item.prompt.length > 14
+                          ? `${item.prompt.substring(0, 14)}...`
+                          : item.prompt}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{item.style}</p>
+                    </div>
+                  </button>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       </aside>

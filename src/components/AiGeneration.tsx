@@ -43,8 +43,8 @@ export default function AiGeneration() {
     })
   }
 
-  const onSelectFile = (file: File) => {
-    setFileUrl(URL.createObjectURL(file))
+  const onSelectFile = (url: string) => {
+    setFileUrl(url)
   }
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function AiGeneration() {
 
   return (
     <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center">
-      <div className="mx-auto max-w-5xl p-8">
+      <div className="mx-auto w-3/4 p-8">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             AI Generation with Chat Refinement
@@ -82,7 +82,7 @@ export default function AiGeneration() {
         </div>
 
         <div className="mt-8 text-center">
-          <button onClick={handleGenerate} className="btn">
+          <button onClick={handleGenerate} className="btn w-full md:w-1/2 lg:w-1/3">
             ✨ Generate
           </button>
           {(validationError || apiError) && (

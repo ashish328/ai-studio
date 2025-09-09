@@ -4,7 +4,6 @@ interface RequestParams extends GenerateImageRequest {
   signal: AbortSignal
 }
 
-// TODO: move the types to an interface and use them;
 export async function generateImageRequest({
   imageDataUrl,
   prompt,
@@ -12,7 +11,7 @@ export async function generateImageRequest({
   signal
 }: RequestParams): Promise<GenerateImageResponse> {
   const randValue = Math.random()
-  if (randValue < 0.9) {
+  if (randValue < 0.2) {
     // Simulate error 20% of the time
     console.log('simulated error', Date.now())
     await new Promise((res) => setTimeout(res, 1500))

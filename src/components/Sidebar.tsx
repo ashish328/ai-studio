@@ -6,7 +6,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { history } = useHistory()
+  const { history, selectedHistory ,setSelectedHistory } = useHistory()
 
   return (
     <>
@@ -32,8 +32,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               history.map((item) => (
                 <li key={item.id}>
                   <button
-                    className="flex w-full items-center space-x-2 rounded-lg p-2 text-left hover:bg-gray-100 focus:inset-ring-2 focus:inset-ring-blue-400 focus:outline-none dark:hover:bg-gray-800"
+                    className={`flex w-full items-center space-x-2 rounded-lg p-2 text-left hover:bg-gray-100 focus:inset-ring-2 focus:inset-ring-blue-400 focus:outline-none dark:hover:bg-gray-800 
+                      ${selectedHistory && item.id === selectedHistory.id ? 'inset-ring-2 inset-ring-blue-400' : '' }
+                    `}
                     aria-label={`Load history: ${item.prompt}, style ${item.style}`}
+                    onClick={() => setSelectedHistory(item)}
                   >
                     <img src={item.imageUrl} alt="" className="h-10 w-10 rounded object-cover" />
                     <div className="flex-1">

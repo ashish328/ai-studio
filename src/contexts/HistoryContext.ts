@@ -6,7 +6,7 @@ interface HistoryContext {
   history: HistoryItem[]
   addHistory: (item: HistoryItem) => void
   selectedHistory: HistoryItem | null
-  setSelectedHistory: (item: HistoryItem) => void
+  setSelectedHistory: (item: HistoryItem | null) => void
 }
 
 export const HistoryContext = createContext<HistoryContext | null>(null)

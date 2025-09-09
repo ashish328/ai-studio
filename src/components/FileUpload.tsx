@@ -6,12 +6,13 @@ import type { ChangeEvent, DragEvent, KeyboardEvent } from 'react'
 import { resizeImage } from '../utils/resizeImage'
 
 interface FileUploadProps {
-  onSelectFile: (file: File) => void
+  onSelectFile: (url: string) => void
 }
 
 export default function FileUpload({ onSelectFile }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const [fileUrl, setFileUrl] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleDragOver = (e: DragEvent<HTMLLabelElement>) => {
@@ -24,6 +25,9 @@ export default function FileUpload({ onSelectFile }: FileUploadProps) {
   }
 
   const handleFile = async (selectedFile: File) => {
+    if (fileUrl) {
+      URL.revokeObjectURL(fileUrl)
+    }
     let resizedFile: File = selectedFile
 
     if (selectedFile.type.startsWith('image/')) {
@@ -31,8 +35,10 @@ export default function FileUpload({ onSelectFile }: FileUploadProps) {
       resizedFile = resized
     }
 
-    onSelectFile(resizedFile)
     setFile(resizedFile)
+    const url = URL.createObjectURL(resizedFile)
+    setFileUrl(url)
+    onSelectFile(url)
   }
 
   const handleDrop = async (e: DragEvent<HTMLLabelElement>) => {
@@ -84,11 +90,7 @@ export default function FileUpload({ onSelectFile }: FileUploadProps) {
           </div>
         ) : (
           <div className="h-full w-full overflow-y-auto p-2">
-            <img
-              src={URL.createObjectURL(file)}
-              alt={file.name}
-              className="h-full w-full rounded-lg object-cover"
-            />
+            <img src={fileUrl} alt={file.name} className="h-full w-full rounded-lg object-cover" />
           </div>
         )}
 

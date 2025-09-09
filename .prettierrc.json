@@ -11,8 +11,8 @@
     "<THIRD_PARTY_MODULES>",
     "^@\/",
     ".tsx",
-    ".css",
-    "^[./]"
+    "^[./]",
+    ".css"
   ],
   "plugins": [
     "@trivago/prettier-plugin-sort-imports",

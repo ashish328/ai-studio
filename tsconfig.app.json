@@ -24,7 +24,6 @@
     "noUncheckedSideEffectImports": true,
 
     "types": [
-      "node",
       "vite/client",
       "vitest/globals",
       "@testing-library/jest-dom"

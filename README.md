@@ -65,4 +65,4 @@ npm run preview
 - ESLint enforces code quality, Prettier enforces formatting.
 - Import order and Tailwind class sorting are handled automatically on save.
 
-As this is a small demo app dint complicate it creating multiple folder.
+As this is a small demo app din't complicate it creating multiple folder.

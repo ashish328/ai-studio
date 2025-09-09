@@ -73,7 +73,7 @@ export default function AiGeneration() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <FileUpload key={fileUploadkey} onSelectFile={onSelectFile} />
+          <FileUpload key={fileUploadkey} onUpload={onSelectFile} />
 
           <div>
             <StyleDropdown value={style} onValueChange={setStyle} />

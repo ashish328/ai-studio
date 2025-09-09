@@ -1,13 +1,16 @@
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 
 import './App.css'
 import AiGeneration from './components/AiGeneration'
 import ErrorBoundary from './components/ErrorBoundary'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
+import { useHistory } from './contexts/HistoryContext'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { selectedHistory, setSelectedHistory } = useHistory()
+  const HistoryPreview = lazy(() => import('./components/HistoryPreview'))
 
   return (
     <div className="min-h-screen bg-white text-black transition-colors dark:bg-gray-900 dark:text-white">

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 
+import { useHistory } from '../contexts/HistoryContext'
 import type { GenerateImageRequest, GenerateImageResponse } from '../types'
 import { generateImageRequest } from '../utils/api'
 import { useError } from './useError'
@@ -10,7 +11,7 @@ export function useGenerateImage(maxRetries: number) {
   const [result, setResult] = useState<GenerateImageResponse | null>(null)
 
   const { error, setError } = useError(3000)
-
+  const { addHistory } = useHistory()
   const abortControllerRef = useRef<AbortController | null>(null)
 
   const generate = useCallback(
@@ -35,6 +36,7 @@ export function useGenerateImage(maxRetries: number) {
           })
 
           setResult(res)
+          addHistory(res)
           return res
         } catch {
           if (abortControllerRef.current.signal.aborted) {

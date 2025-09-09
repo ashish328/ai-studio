@@ -58,7 +58,7 @@ export function useGenerateImage(maxRetries: number) {
 
       return null
     },
-    [attempt, maxRetries, setError]
+    [addHistory, attempt, maxRetries, setError]
   )
 
   const abort = useCallback(() => {

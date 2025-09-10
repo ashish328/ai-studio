@@ -1,6 +1,6 @@
 # AI Studio
 
-A React + Vite + typescript app which has a sample ui for demo to upload images and generate new images with help of Generative AI.
+A React + Vite + typescript app which has a sample ui for demo to upload images and generate new images with help of Generative AI (image generation part is not complete yet).
 
 ## Getting Started
 

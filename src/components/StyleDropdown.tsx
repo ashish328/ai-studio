@@ -19,6 +19,9 @@ export default function StyleDropdown({ value, onValueChange, ...props }: StyleD
         onChange={(e) => onValueChange(e.target.value)}
         className="rounded-lg border border-gray-300 bg-white p-3 text-gray-800 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
       >
+        <option value="" disabled hidden>
+          Select an option
+        </option>
         {styles.map((style) => (
           <option key={style} value={style}>
             {style}

@@ -12,7 +12,7 @@ export default function AiGeneration() {
   const [fileUploadkey, setFileUploadKey] = useState<number>(0)
 
   const [prompt, setPrompt] = useState('')
-  const [style, setStyle] = useState('Photorealistic')
+  const [style, setStyle] = useState('')
 
   const { error: validationError, setError: setValidationError } = useError()
 
@@ -22,7 +22,7 @@ export default function AiGeneration() {
   const resetFields = () => {
     setFileUrl('')
     setPrompt('')
-    setStyle('Photorealistic')
+    setStyle('')
     setFileUploadKey((prev) => prev + 1)
   }
 
